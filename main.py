@@ -4,7 +4,7 @@ from scipy.spatial import Delaunay
 import numpy as np
 import matplotlib.pyplot as plt
 img  = Image.open("dog.jpg")
-print(img)
+#print(img)
 img = np.array(img)
 #Image.fromarray(img).show()
 gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
@@ -12,7 +12,7 @@ edges = cv.Canny(gray_image, 50, 200)
 #plt.imshow(edges, cmap='gray')
 #plt.title('Edge Image')
 #plt.show()
-Image.fromarray(gray_image).show()
+#Image.fromarray(gray_image).show()
 sift = cv.SIFT_create()
 keypoints, descriptors = sift.detectAndCompute(gray_image, None)
 image_with_sift = cv.drawKeypoints(img, keypoints, None)
@@ -23,11 +23,11 @@ points= []
 for kp in keypoints:
     x,y = kp.pt
     points.append((int(x),int(y)))
-print(len(points))
-plt.imshow(img)
-for x,y in points:
-    plt.scatter(x,y,s=2,c = "red")
-plt.show()
+#print(len(points))
+#plt.imshow(img)
+#for x,y in points:
+#    plt.scatter(x,y,s=2,c = "red")
+#plt.show()
 h, w = gray_image.shape
 
 points.extend([
@@ -39,17 +39,46 @@ points.extend([
 points = np.unique(np.array(points), axis=0)
 tri = Delaunay(points)
 
+
+
+vertices = points[tri.simplices]
+print(vertices.shape)
+mid = []
+
+for n in vertices:
+    mid.append((np.sum(n[:,0])/3,np.sum(n[:,1])/3))
+print(f"point 1: {mid[0]}")
+mid = np.array(mid)
+def edgesfunc():
+    plt.figure(figsize=(10,10))
+    plt.imshow(img)
+
+    plt.triplot(
+        points[:,0],
+        points[:,1],
+        tri.simplices,
+        linewidth=0.4,
+        color="white"
+    )
+    plt.scatter(mid[:,0],mid[:,1],s =1)
+
+    plt.show()
+colour = []
+for n in  mid:
+    x = int(round(n[0]))
+    y = int(round(n[1]))
+    r,g,b = img[y,x]
+    colour.append((r,g,b))
 plt.figure(figsize=(10,10))
 plt.imshow(img)
-
-plt.triplot(
-    points[:,0],
-    points[:,1],
-    tri.simplices,
-    linewidth=0.4,
-    color="white"
-)
+for n,rgb in zip(vertices,colour):
+    x = n[:,0]
+    y = n[:,1]
+    rgb =np.array(rgb)
+    plt.fill(x, y, color = rgb/255)
+    
 
 plt.show()
+
 
 
