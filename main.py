@@ -3,12 +3,12 @@ import cv2 as cv
 from scipy.spatial import Delaunay
 import numpy as np
 import matplotlib.pyplot as plt
-img  = Image.open("dog.jpg")
+img  = Image.open("dog2.jpg")
 #print(img)
 img = np.array(img)
 #Image.fromarray(img).show()
 gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
-edges = cv.Canny(gray_image, 50, 200)
+edges = cv.Canny(gray_image, 10, 200)
 #plt.imshow(edges, cmap='gray')
 #plt.title('Edge Image')
 #plt.show()
@@ -52,7 +52,6 @@ mid = np.array(mid)
 def edgesfunc():
     plt.figure(figsize=(10,10))
     plt.imshow(img)
-
     plt.triplot(
         points[:,0],
         points[:,1],
