@@ -16,9 +16,9 @@ Image.fromarray(gray_image).show()
 sift = cv.SIFT_create()
 keypoints, descriptors = sift.detectAndCompute(gray_image, None)
 image_with_sift = cv.drawKeypoints(img, keypoints, None)
-plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))
-plt.title('SIFT Features')
-plt.show()
+#plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))
+#plt.title('SIFT Features')
+#plt.show()
 points= []
 for kp in keypoints:
     x,y = kp.pt
