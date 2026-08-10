@@ -37,46 +37,50 @@ def colourpicker(vertices):
         colour.append((r,g,b))
     return np.array(colour)
 
-img  = Image.open("dog.jpg")
+def bg_point_adder(edges,points,w,randomizer = 50):
+
+    edgepoints_first = []
+    edgepoints_last = []
+    for y, n in enumerate(edges):
+        first = True
+        for x, i in enumerate(n):
+            if i == 255:
+                if first:
+                    edgepoints_first.append((x,y))
+                    edgepoints_last.append((x,y))
+                    first = False
+                edgepoints_last.pop()
+                edgepoints_last.append([x,y])
+    edgepoints_last = np.array(edgepoints_last)
+    edgepoints_first = np.array(edgepoints_first)
+    """"
+    plt.scatter(w-edge_points[:,0],h-edge_points[:,1],s = 2)
+    plt.show()
+    plt.scatter(w-edgepoints_last[:,0],h-edgepoints_last[:,1],s = 2)
+    plt.scatter(w-edgepoints_first[:,0],h-edgepoints_first[:,1],s = 2)
+    plt.show()
+    """
+    for x,n in enumerate(edgepoints_first):
+        if np.random.randint(0,100)>randomizer:
+            randcoord = np.random.randint(0,n[0])
+            points.append([randcoord,n[1]])
+    for x,n in enumerate(edgepoints_last):
+        if np.random.randint(0,100)>randomizer:
+            randcoord = np.random.randint(n[0],w)
+            points.append([randcoord,n[1]])
+
+img  = Image.open("dog3.jpg")
 img = np.array(img)
 gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 h, w = gray_image.shape
 edges = cv.Canny(gray_image, 50, 100)
 print(len(edges[0]))
-edge_points = []
-edgepoints_first = []
-edgepoints_last = []
-plt.title('edges Features')
 
-for y, n in enumerate(edges):
-    first = True
-    for x, i in enumerate(n):
-        if i == 255:
-            if first:
-                edgepoints_first.append((x,y))
-                edgepoints_last.append((x,y))
-                first = False
-            edgepoints_last.pop()
-            edgepoints_last.append([x,y])
-            edge_points.append([x,y])
-edgepoints_last = np.array(edgepoints_last)
-edgepoints_first = np.array(edgepoints_first)
-edge_points = np.array(edge_points)
+
 points= []
-plt.scatter(w-edge_points[:,0],h-edge_points[:,1],s = 2)
-plt.show()
-plt.scatter(w-edgepoints_last[:,0],h-edgepoints_last[:,1],s = 2)
-plt.scatter(w-edgepoints_first[:,0],h-edgepoints_first[:,1],s = 2)
-plt.show()
+bg_point_adder(edges,points,w)
 sift = cv.SIFT_create()
-for x,n in enumerate(edgepoints_first):
-    if np.random.randint(0,100)>20:
-        randcoord = np.random.randint(0,n[0])
-        points.append([randcoord,n[1]])
-for x,n in enumerate(edgepoints_last):
-    if np.random.randint(0,100)>20:
-        randcoord = np.random.randint(n[0],w)
-        points.append([randcoord,n[1]])
+
 keypoints, descriptors = sift.detectAndCompute(gray_image, None)
 image_with_sift = cv.drawKeypoints(img, keypoints, None)
 #plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))
@@ -86,6 +90,7 @@ plt.show()
 for kp in keypoints:
     x,y = kp.pt
     points.append((int(x),int(y)))
+
 
 #print(len(points))
 #plt.imshow(img)
