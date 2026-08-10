@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trianglator</title>
+</head>
+
+<body>
+
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="uploadImage()">Process</button>
+    <img id="result" width="500">
+
+<script>
+async function uploadImage() {
+    const file = document.getElementById("imageInput").files[0];
+
+    if (!file) {
+        alert("Choose an image first!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch("/process", {
+        method: "POST",
+        body: formData
+    });
+
+    const blob = await response.blob();
+
+    document.getElementById("result").src = URL.createObjectURL(blob);
+}
+    </script>
+
+</body>
+</html>

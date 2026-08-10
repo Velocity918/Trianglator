@@ -1,8 +1,11 @@
+import matplotlib
 from PIL import Image
+matplotlib.use("Agg")
 import cv2 as cv
 from scipy.spatial import Delaunay
 import numpy as np
 import matplotlib.pyplot as plt
+from io import BytesIO
 def midpoint_finder(vertices):
     
     mid = []
@@ -13,21 +16,7 @@ def midpoint_finder(vertices):
     mid = np.array(mid)
     return mid
 
-def edgesfunc():
-    plt.figure(figsize=(10,10))
-    plt.imshow(img)
-    plt.triplot(
-        points[:,0],
-        points[:,1],
-        tri.simplices,
-        linewidth=0.4,
-        color="white"
-    )
-    plt.scatter(mid[:,0],mid[:,1],s =1)
-
-    plt.show()
-
-def colourpicker(vertices):
+def colourpicker(vertices,img):
     mid = midpoint_finder(vertices)
     colour = []
     for n in  mid:
@@ -37,7 +26,7 @@ def colourpicker(vertices):
         colour.append((r,g,b))
     return np.array(colour)
 
-def bg_point_adder(edges,points,w,randomizer = 50):
+def bg_point_adder(edges,points,w,randomizer):
 
     edgepoints_first = []
     edgepoints_last = []
@@ -62,62 +51,65 @@ def bg_point_adder(edges,points,w,randomizer = 50):
     """
     for x,n in enumerate(edgepoints_first):
         if np.random.randint(0,100)>randomizer:
-            randcoord = np.random.randint(0,n[0])
-            points.append([randcoord,n[1]])
+            if n[0]>0:
+                randcoord = np.random.randint(0,n[0])
+                points.append([randcoord,n[1]])
     for x,n in enumerate(edgepoints_last):
         if np.random.randint(0,100)>randomizer:
-            randcoord = np.random.randint(n[0],w)
-            points.append([randcoord,n[1]])
+            if n[0]<w:
+                randcoord = np.random.randint(n[0],w)
+                points.append([randcoord,n[1]])
+def triangulator(img_string,bg_density = 50):
+    img = Image.open(img_string).convert("RGB")
+    img = np.array(img)
+    gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+    h, w = gray_image.shape
+    edges = cv.Canny(gray_image, 50, 100)
 
-img  = Image.open("dog3.jpg")
-img = np.array(img)
-gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
-h, w = gray_image.shape
-edges = cv.Canny(gray_image, 50, 100)
-print(len(edges[0]))
+    points= []
+    bg_point_adder(edges,points,w,randomizer=bg_density)
+    sift = cv.SIFT_create()
+    keypoints, descriptors = sift.detectAndCompute(gray_image, None)
+    image_with_sift = cv.drawKeypoints(img, keypoints, None)
+    #plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))
+    #plt.title('SIFT Features')
+    #plt.show()
 
-
-points= []
-bg_point_adder(edges,points,w)
-sift = cv.SIFT_create()
-
-keypoints, descriptors = sift.detectAndCompute(gray_image, None)
-image_with_sift = cv.drawKeypoints(img, keypoints, None)
-#plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))
-#plt.title('SIFT Features')
-plt.show()
-
-for kp in keypoints:
-    x,y = kp.pt
-    points.append((int(x),int(y)))
+    for kp in keypoints:
+        x,y = kp.pt
+        points.append((int(x),int(y)))
 
 
-#print(len(points))
-#plt.imshow(img)
-#for x,y in points:
-#    plt.scatter(x,y,s=2,c = "red")
-#plt.show()
+    #print(len(points))
+    #plt.imshow(img)
+    #for x,y in points:
+    #    plt.scatter(x,y,s=2,c = "red")
+    #plt.show()
 
-points.extend([
-    (0,0),
-    (w-1,0),
-    (0,h-1),
-    (w-1,h-1)
-])
+    points.extend([
+        (0,0),
+        (w-1,0),
+        (0,h-1),
+        (w-1,h-1)
+    ])
 
-points = np.unique(np.array(points), axis=0)
-tri = Delaunay(points)
-vertices = points[tri.simplices]
-print(vertices.shape)
-colour = colourpicker(vertices)
-plt.figure(figsize=(10,10))
-plt.imshow(img)
-for n,rgb in zip(vertices,colour):
-    x = n[:,0]
-    y = n[:,1]
-    rgb =np.array(rgb)
-    plt.fill(x, y, color = rgb/255)
-plt.show()
+    points = np.unique(np.array(points), axis=0)
+    tri = Delaunay(points)
+    vertices = points[tri.simplices]
+    print(vertices.shape)
+    colour = colourpicker(vertices,img)
+    plt.figure(figsize=(10,10))
+    plt.imshow(img)
+    for n,rgb in zip(vertices,colour):
+        x = n[:,0]
+        y = n[:,1]
+        rgb =np.array(rgb)
+        plt.fill(x, y, color = rgb/255)
+    plt.axis("off")
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png", bbox_inches="tight")
+    buffer.seek(0)
 
+    plt.close()
 
-
+    return buffer
