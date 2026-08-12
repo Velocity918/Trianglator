@@ -1,5 +1,5 @@
 import matplotlib
-from PIL import Image
+from PIL import Image,ImageOps
 matplotlib.use("Agg")
 import cv2 as cv
 from scipy.spatial import Delaunay
@@ -61,6 +61,11 @@ def bg_point_adder(edges,points,w,randomizer):
                 points.append([randcoord,n[1]])
 def triangulator(img_string,bg_density = 50):
     img = Image.open(img_string).convert("RGB")
+    max_size = 1500
+
+    if max(img.size) > max_size:
+        img.thumbnail((max_size, max_size))
+    img = ImageOps.exif_transpose(img)
     img = np.array(img)
     gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
     h, w = gray_image.shape

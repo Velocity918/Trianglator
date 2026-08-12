@@ -9,8 +9,6 @@ def hello_world():
 @app.route("/process", methods=["POST"])
 def process():
     file = request.files["image"]
-
-    file.save("input.jpg")
     output = main.triangulator(file)
     return send_file(output, mimetype="image/png")
 
