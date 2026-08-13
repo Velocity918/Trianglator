@@ -59,7 +59,7 @@ def bg_point_adder(edges,points,w,randomizer):
             if n[0]<w:
                 randcoord = np.random.randint(n[0],w)
                 points.append([randcoord,n[1]])
-def triangulator(img_string,bg_density = 50):
+def triangulator(img_string,bg_density = 50,lower_canny = 50,upper_canny=100,sift_points = 0):
     img = Image.open(img_string).convert("RGB")
     max_size = 1500
 
@@ -69,11 +69,11 @@ def triangulator(img_string,bg_density = 50):
     img = np.array(img)
     gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
     h, w = gray_image.shape
-    edges = cv.Canny(gray_image, 50, 100)
+    edges = cv.Canny(gray_image, lower_canny, upper_canny)
 
     points= []
-    bg_point_adder(edges,points,w,randomizer=bg_density)
-    sift = cv.SIFT_create()
+    bg_point_adder(edges,points,w,randomizer=(100-bg_density))
+    sift = cv.SIFT_create(nfeatures = sift_points)
     keypoints, descriptors = sift.detectAndCompute(gray_image, None)
     image_with_sift = cv.drawKeypoints(img, keypoints, None)
     #plt.imshow(cv.cvtColor(image_with_sift, cv.COLOR_BGR2RGB))

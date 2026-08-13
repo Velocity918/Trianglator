@@ -2,17 +2,122 @@
 <html>
 <head>
     <title>Trianglator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin: 18px 0;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        #result {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 25px auto;
+            border-radius: 8px;
+        }
+
+        .note {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <input type="file" id="imageInput" accept="image/*">
+<div class="container">
+
+    <h1>Trianglator</h1>
+
+    <div class="input-group">
+        <label for="imageInput">Image</label>
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
+
+    <div class="input-group">
+        <label for="edgeLower">Edge Lower Threshold</label>
+        <input type="number" id="edgeLower" value="50" min="0">
+    </div>
+
+    <div class="input-group">
+        <label for="edgeHigher">Edge Higher Threshold</label>
+        <input type="number" id="edgeHigher" value="150" min="0">
+    </div>
+
+    <div class="input-group">
+        <label for="bgPoints">Background Points (%)</label>
+        <input type="number" id="bgPoints" value="20" min="0" max="100">
+    </div>
+
+    <div class="input-group">
+        <label for="siftFeatures">SIFT Max Features</label>
+        <input type="number" id="siftFeatures" value="1000" min="0">
+    </div>
+
     <button onclick="uploadImage()">Process</button>
-    <img id="result" width="500">
-    <h1>Takes atleast 20s</h1>
+
+    <img id="result">
+
+    <p class="note">Processing may take at least 20 seconds.</p>
+
+</div>
 
 <script>
 async function uploadImage() {
+
     const file = document.getElementById("imageInput").files[0];
 
     if (!file) {
@@ -21,7 +126,16 @@ async function uploadImage() {
     }
 
     const formData = new FormData();
+
     formData.append("image", file);
+    formData.append("edge_lower",
+        document.getElementById("edgeLower").value);
+    formData.append("edge_higher",
+        document.getElementById("edgeHigher").value);
+    formData.append("bg_points",
+        document.getElementById("bgPoints").value);
+    formData.append("sift_features",
+        document.getElementById("siftFeatures").value);
 
     const response = await fetch("/process", {
         method: "POST",
@@ -30,9 +144,10 @@ async function uploadImage() {
 
     const blob = await response.blob();
 
-    document.getElementById("result").src = URL.createObjectURL(blob);
+    document.getElementById("result").src =
+        URL.createObjectURL(blob);
 }
-    </script>
+</script>
 
 </body>
 </html>

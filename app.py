@@ -9,7 +9,13 @@ def hello_world():
 @app.route("/process", methods=["POST"])
 def process():
     file = request.files["image"]
-    output = main.triangulator(file)
+
+    edge_lower = int(request.form["edge_lower"])
+    edge_higher = int(request.form["edge_higher"])
+    bg_points = int(request.form["bg_points"])
+    sift_features = int(request.form["sift_features"])
+    output = main.triangulator(file,
+        int(bg_points),int(edge_lower),int(edge_higher),int(sift_features))
     return send_file(output, mimetype="image/png")
 
 if __name__ == "__main__":
