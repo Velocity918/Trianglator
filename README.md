@@ -52,4 +52,7 @@ The Combination of the two is what triangulator uses
 ![Canny+SIFT](https://github.com/Velocity918/Trianglator/blob/main/README_files/Canny+Sift.png?raw=true "Combining the two images outputs")
 
 
+Check out the [Gallery](https://trianglator-kohl.vercel.app/gallery)
+
+
 Processing can take 10+ seconds depending on the image and settings.
