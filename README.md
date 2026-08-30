@@ -22,8 +22,9 @@ Suppose the User has chosen 1000, SIFT will choose the 1000 most important point
 
 Canny edge detection:
 Canny Edge Detection is a Computer Vision algorithm for identifying edges in images.
-Triangulator uses this to seperate the Image
-![Background Point Only](README_files\Canny.png)
+Triangulator uses this to seperate the Image's foreground and background.
+![Background Point Only](https://raw.githubusercontent.com/Velocity918/Trianglator/5c763bc1f57605fb147274c9e249ca8c84bf0333/README_files/Canny.png)
+
 
 
 Processing can take 10+ seconds depending on the image and settings.
