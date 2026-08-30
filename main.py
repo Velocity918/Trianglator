@@ -9,11 +9,11 @@ from io import BytesIO
 def midpoint_finder(vertices):
     
     mid = []
-
-    for n in vertices:
-        mid.append((np.sum(n[:,0])/3,np.sum(n[:,1])/3))
-    print(f"point 1: {mid[0]}")
-    mid = np.array(mid)
+    mid = np.mean(vertices,axis=1)
+    #for n in vertices:
+        #mid.append((np.sum(n[:,0])/3,np.sum(n[:,1])/3))
+    #print(f"point 1: {mid[0]}")
+    #mid = np.array(mid)
     return mid
 
 def colourpicker(vertices,img):
@@ -60,11 +60,21 @@ def bg_point_adder(edges,points,w,randomizer):
                 randcoord = np.random.randint(n[0],w)
                 points.append([randcoord,n[1]])
 def triangulator(img_string,bg_density = 50,lower_canny = 50,upper_canny=100,sift_points = 0):
-    img = Image.open(img_string).convert("RGB")
-    max_size = 1500
+    img = Image.open(img_string)
 
-    if max(img.size) > max_size:
-        img.thumbnail((max_size, max_size))
+    if img.mode in ("RGBA", "LA") or "transparency" in img.info:
+        img = img.convert("RGBA")
+        alpha = img.getchannel("A")
+
+        background = Image.new("RGB", img.size, "white")
+        background.paste(img, mask=alpha)
+        img = background
+    else:
+        img = img.convert("RGB")
+        
+
+    if max(img.size) > 1500:
+        img.thumbnail((1500, 1500))
     img = ImageOps.exif_transpose(img)
     img = np.array(img)
     gray_image = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
