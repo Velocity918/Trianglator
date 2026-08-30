@@ -28,9 +28,8 @@ Canny Edge Detection is a Computer Vision algorithm for identifying edges in ima
 Triangulator uses this to seperate the Image's foreground and background.
 This allows the program to generate background points by generating points randomly outside the edges.
 
-The lower threshold removes all edges weaker than that threshold, the hgiher threshold ensures that all edges above that threshold go on, edges in the middle are sorted by wehter they touch a strong threshold or not.
+The lower threshold removes edges weaker than the specified value, while the higher threshold ensures that edges above it are retained. Edges that fall between the two thresholds are classified based on whether they are connected to a strong edge.
 
-The Combination of the two is what triangulator uses
 It also allows you to play around with Images.
 <table>
   <tr>
@@ -46,6 +45,9 @@ It also allows you to play around with Images.
     </td>
   </tr>
 </table>
+
+The Combination of the two is what triangulator uses
+
 
 ![Canny+SIFT](https://github.com/Velocity918/Trianglator/blob/main/README_files/Canny+Sift.png?raw=true "Combining the two images outputs")
 
