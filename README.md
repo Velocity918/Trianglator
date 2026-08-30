@@ -28,17 +28,26 @@ Canny Edge Detection is a Computer Vision algorithm for identifying edges in ima
 Triangulator uses this to seperate the Image's foreground and background.
 This allows the program to generate background points by generating points randomly outside the edges.
 
-It also allows you to play around with Images.
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Velocity918/Trianglator/5c763bc1f57605fb147274c9e249ca8c84bf0333/README_files/Canny.png" alt="only Background Points" width="400">
-  <img src="https://github.com/Velocity918/Trianglator/blob/e4c1be10841213f9c470b7d786cb971f56129f6a/README_files/SIFT.png?raw=true" alt="Image with only SIFT points" width="400">
-</p>
+The lower threshold removes all edges weaker than that threshold, the hgiher threshold ensures that all edges above that threshold go on, edges in the middle are sorted by wehter they touch a strong threshold or not.
 
-<p align="center">
-  <em>Image with only Background Points</em>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <em>Image with only SIFT points</em>
-</p>
+The Combination of the two is what triangulator uses
+It also allows you to play around with Images.
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Velocity918/Trianglator/5c763bc1f57605fb147274c9e249ca8c84bf0333/README_files/Canny.png" alt="Image with only Background Points" width="400">
+      <br>
+      <em>Image with only Background Points</em>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/Velocity918/Trianglator/e4c1be10841213f9c470b7d786cb971f56129f6a/README_files/SIFT.png?raw=true" alt="Image with only SIFT points" width="400">
+      <br>
+      <em>Image with only SIFT points</em>
+    </td>
+  </tr>
+</table>
+
+![Canny+SIFT](https://github.com/Velocity918/Trianglator/blob/main/README_files/Canny+Sift.png?raw=true "Combining the two images outputs")
 
 
 Processing can take 10+ seconds depending on the image and settings.
