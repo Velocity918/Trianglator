@@ -7,14 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
 def midpoint_finder(vertices):
-    
-    mid = []
-    mid = np.mean(vertices,axis=1)
-    #for n in vertices:
-        #mid.append((np.sum(n[:,0])/3,np.sum(n[:,1])/3))
-    #print(f"point 1: {mid[0]}")
-    #mid = np.array(mid)
-    return mid
+    return np.mean(vertices,axis=1)
 
 def colourpicker(vertices,img):
     mid = midpoint_finder(vertices)
@@ -27,6 +20,7 @@ def colourpicker(vertices,img):
     return np.array(colour)
 
 def bg_point_adder(edges,points,w,randomizer):
+
 
     edgepoints_first = []
     edgepoints_last = []
@@ -59,6 +53,8 @@ def bg_point_adder(edges,points,w,randomizer):
             if n[0]<w:
                 randcoord = np.random.randint(n[0],w)
                 points.append([randcoord,n[1]])
+
+
 def triangulator(img_string,bg_density = 50,lower_canny = 50,upper_canny=100,sift_points = 0):
     img = Image.open(img_string)
 
