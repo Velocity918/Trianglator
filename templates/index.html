@@ -1,117 +1,253 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trianglator</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 40px;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        color: #222;
+        margin: 0;
+        padding: 40px 20px;
+    }
 
-        h1 {
-            text-align: center;
-            margin-top: 0;
-        }
+    .container {
+        max-width: 650px;
+        margin: 0 auto;
+    }
 
-        .input-group {
-            margin: 18px 0;
-        }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
+    .header h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: normal;
+    }
 
-        input[type="number"],
-        input[type="file"] {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
-        }
+    .header a {
+        color: #222;
+        text-decoration: none;
+        font-size: 14px;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    .header a:hover {
+        text-decoration: underline;
+    }
 
-        button:hover {
-            background: #555;
-        }
+    .input-group {
+        margin-bottom: 18px;
+    }
 
-        #result {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 25px auto;
-            border-radius: 8px;
-        }
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
 
-        .note {
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-        }
-    </style>
+    input[type="number"],
+    input[type="file"] {
+        width: 100%;
+        padding: 9px;
+        border: 1px solid #bbb;
+        background: white;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    input[type="number"]:focus,
+    input[type="file"]:focus {
+        outline: none;
+        border-color: #555;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 4px;
+        border: none;
+        background: #222;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #444;
+    }
+
+    button:disabled {
+        background: #888;
+        cursor: wait;
+    }
+
+    .how-to {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #ccc;
+    }
+
+    .how-to h2 {
+        margin: 0 0 12px;
+        font-size: 18px;
+        font-weight: normal;
+    }
+
+    .how-to p {
+        margin: 6px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #555;
+    }
+
+    .how-to strong {
+        color: #222;
+    }
+
+    #result {
+        display: none;
+        width: 100%;
+        height: auto;
+        margin-top: 30px;
+    }
+
+    .note {
+        margin-top: 10px;
+        color: #777;
+        font-size: 12px;
+    }
+
+    #status {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #555;
+        display: none;
+    }
+
+    #error {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #b00020;
+        display: none;
+    }
+</style>
+
+
 </head>
 
 <body>
 
 <div class="container">
 
+<div class="header">
     <h1>Trianglator</h1>
+    <a href="/gallery">Gallery</a>
+</div>
 
-    <div class="input-group">
-        <label for="imageInput">Image</label>
-        <input type="file" id="imageInput" accept="image/*">
-    </div>
+<div class="input-group">
+    <label for="imageInput">Image</label>
+    <input type="file" id="imageInput" accept="image/*">
+</div>
 
-    <div class="input-group">
-        <label for="edgeLower">Edge Detection Lower Threshold</label>
-        <input type="number" id="edgeLower" value="50" min="0">
-    </div>
+<div class="input-group">
+    <label for="edgeLower">Edge Detection Lower Threshold</label>
+    <input
+        type="number"
+        id="edgeLower"
+        value="50"
+        min="0"
+        max="255"
+    >
+</div>
 
-    <div class="input-group">
-        <label for="edgeHigher">Edge Detection Higher Threshold</label>
-        <input type="number" id="edgeHigher" value="150" min="0">
-    </div>
+<div class="input-group">
+    <label for="edgeHigher">Edge Detection Higher Threshold</label>
+    <input
+        type="number"
+        id="edgeHigher"
+        value="150"
+        min="0"
+        max="255"
+    >
+</div>
 
-    <div class="input-group">
-        <label for="bgPoints">Density of Background Points (%)</label>
-        <input type="number" id="bgPoints" value="20" min="0" max="100">
-    </div>
+<div class="input-group">
+    <label for="bgPoints">Density of Background Points (%)</label>
+    <input
+        type="number"
+        id="bgPoints"
+        value="20"
+        min="0"
+        max="100"
+    >
+</div>
 
-    <div class="input-group">
-        <label for="siftFeatures">SIFT Features (Most Important Points) (0 is unlimited)</label>
-        <input type="number" id="siftFeatures" value="1000" min="0">
-    </div>
+<div class="input-group">
+    <label for="siftFeatures">
+        SIFT Features (Most Important Points)
+    </label>
 
-    <button onclick="uploadImage()">Process</button>
+    <input
+        type="number"
+        id="siftFeatures"
+        value="1000"
+        min="0"
+    >
+</div>
 
-    <img id="result">
+<button id="processButton" onclick="uploadImage()">
+    Process
+</button>
 
-    <p class="note">Processing may take at least 20 seconds.</p>
+<div id="status">
+    Processing image...
+</div>
+
+<div id="error"></div>
+<img id="result" alt="Triangulated image">
+<div class="how-to">
+
+    <h2>How to use</h2>
+
+    <p>
+        The Edge Detection Thresholds control which edges are detected
+        in the image. The lower threshold controls weak edges, while the
+        higher threshold controls strong edges.
+    </p>
+
+    <p>
+        The SIFT parameter controls the maximum number of important
+        points detected by SIFT. A value of 0 allows all detected points
+        to be used.
+    </p>
+
+    <p>
+        The Density of Background Points controls how frequently points
+        are placed in areas without detected features. A higher value
+        creates more points and therefore smaller triangles.
+    </p>
+
+</div>
+
+
+
+<p class="note">
+    Processing may take at least 20 seconds.
+</p>
+
 
 </div>
 
@@ -119,33 +255,97 @@
 async function uploadImage() {
 
     const file = document.getElementById("imageInput").files[0];
+    const button = document.getElementById("processButton");
+    const status = document.getElementById("status");
+    const error = document.getElementById("error");
+    const result = document.getElementById("result");
 
     if (!file) {
         alert("Choose an image first!");
         return;
     }
 
+    // Clear previous state
+    error.style.display = "none";
+    error.textContent = "";
+
+    result.style.display = "none";
+
+    // Loading state
+    button.disabled = true;
+    button.textContent = "Processing...";
+    status.style.display = "block";
+
     const formData = new FormData();
 
     formData.append("image", file);
-    formData.append("edge_lower",
-        document.getElementById("edgeLower").value);
-    formData.append("edge_higher",
-        document.getElementById("edgeHigher").value);
-    formData.append("bg_points",
-        document.getElementById("bgPoints").value);
-    formData.append("sift_features",
-        document.getElementById("siftFeatures").value);
 
-    const response = await fetch("/process", {
-        method: "POST",
-        body: formData
-    });
+    formData.append(
+        "edge_lower",
+        document.getElementById("edgeLower").value
+    );
 
-    const blob = await response.blob();
+    formData.append(
+        "edge_higher",
+        document.getElementById("edgeHigher").value
+    );
 
-    document.getElementById("result").src =
-        URL.createObjectURL(blob);
+    formData.append(
+        "bg_points",
+        document.getElementById("bgPoints").value
+    );
+
+    formData.append(
+        "sift_features",
+        document.getElementById("siftFeatures").value
+    );
+
+    try {
+
+        const response = await fetch("/process", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            const message = await response.text();
+            throw new Error(
+                `Server error (${response.status}): ${message}`
+            );
+        }
+
+        const blob = await response.blob();
+
+        if (!blob.type.startsWith("image/")) {
+            throw new Error("The server did not return an image.");
+        }
+
+        // Free the previous object URL if one exists
+        if (result.dataset.url) {
+            URL.revokeObjectURL(result.dataset.url);
+        }
+
+        const imageUrl = URL.createObjectURL(blob);
+
+        result.dataset.url = imageUrl;
+        result.src = imageUrl;
+        result.style.display = "block";
+
+    } catch (err) {
+
+        console.error(err);
+
+        error.textContent =
+            "Something went wrong while processing the image.";
+
+        error.style.display = "block";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Process";
+        status.style.display = "none";
+    }
 }
 </script>
 

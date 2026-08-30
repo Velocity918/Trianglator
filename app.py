@@ -17,6 +17,8 @@ def process():
     output = main.triangulator(file,
         int(bg_points),int(edge_lower),int(edge_higher),int(sift_features))
     return send_file(output, mimetype="image/png")
-
+@app.route("/gallery")
+def gallery():
+    return render_template("gallery.html")
 if __name__ == "__main__":
     app.run(debug=True)
